@@ -1,0 +1,287 @@
+{
+  "cells": [
+    {
+      "metadata": {
+        "_uuid": "fb2ffecc2b1766c27194b71c054ea04b6ed9c5b5"
+      },
+      "cell_type": "markdown",
+      "source": "## Recap\nSo far, you have loaded your data and reviewed it with the following code. Run this cell to set up your coding environment where the previous step left off."
+    },
+    {
+      "metadata": {
+        "_uuid": "e982c40a60a29c8f55a18a25e98f4048922eff08",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# Code you have previously used to load data\nimport pandas as pd\n\n# Path of the file to read\niowa_file_path = '../input/home-data-for-ml-course/train.csv'\n\nhome_data = pd.read_csv(iowa_file_path)\n\n# Set up code checking\nfrom learntools.core import binder\nbinder.bind(globals())\nfrom learntools.machine_learning.ex3 import *\n\nprint(\"Setup Complete\")",
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": "WARNING:root:Ignoring repeated attempt to bind to globals\n",
+          "name": "stderr"
+        },
+        {
+          "output_type": "stream",
+          "text": "Setup Complete\n",
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "7e8d325ab74aaef0d3c5ad775d9aebfcbe640b63"
+      },
+      "cell_type": "markdown",
+      "source": "# Exercises\n\n## Step 1: Specify Prediction Target\nSelect the target variable, which corresponds to the sales price. Save this to a new variable called `y`. You'll need to print a list of the columns to find the name of the column you need.\n"
+    },
+    {
+      "metadata": {
+        "_uuid": "1cc4ff6476f8693af2c4faaa3d03af92b032fed0",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# print the list of columns in the dataset to find the name of the prediction target\nprint(home_data.columns)",
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": "Index(['Id', 'MSSubClass', 'MSZoning', 'LotFrontage', 'LotArea', 'Street',\n       'Alley', 'LotShape', 'LandContour', 'Utilities', 'LotConfig',\n       'LandSlope', 'Neighborhood', 'Condition1', 'Condition2', 'BldgType',\n       'HouseStyle', 'OverallQual', 'OverallCond', 'YearBuilt', 'YearRemodAdd',\n       'RoofStyle', 'RoofMatl', 'Exterior1st', 'Exterior2nd', 'MasVnrType',\n       'MasVnrArea', 'ExterQual', 'ExterCond', 'Foundation', 'BsmtQual',\n       'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinSF1',\n       'BsmtFinType2', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF', 'Heating',\n       'HeatingQC', 'CentralAir', 'Electrical', '1stFlrSF', '2ndFlrSF',\n       'LowQualFinSF', 'GrLivArea', 'BsmtFullBath', 'BsmtHalfBath', 'FullBath',\n       'HalfBath', 'BedroomAbvGr', 'KitchenAbvGr', 'KitchenQual',\n       'TotRmsAbvGrd', 'Functional', 'Fireplaces', 'FireplaceQu', 'GarageType',\n       'GarageYrBlt', 'GarageFinish', 'GarageCars', 'GarageArea', 'GarageQual',\n       'GarageCond', 'PavedDrive', 'WoodDeckSF', 'OpenPorchSF',\n       'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea', 'PoolQC',\n       'Fence', 'MiscFeature', 'MiscVal', 'MoSold', 'YrSold', 'SaleType',\n       'SaleCondition', 'SalePrice'],\n      dtype='object')\n",
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "aec68e57e888387f3ba2ff6eb117d34be9d2c234",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "y = home_data.SalePrice\n\nstep_1.check()",
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "<IPython.core.display.Javascript object>",
+            "application/javascript": "parent.postMessage({\"jupyterEvent\": \"custom.exercise_interaction\", \"data\": {\"outcomeType\": 1, \"valueTowardsCompletion\": 0.25, \"interactionType\": 1, \"learnTutorialId\": 84, \"questionId\": \"1_SetTarget\", \"learnToolsVersion\": \"0.2.5\", \"failureMessage\": \"\", \"exceptionClass\": \"\", \"trace\": \"\"}}, \"*\")"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "Correct",
+            "text/markdown": "<span style=\"color:#33cc33\">Correct</span>"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "132f4f373a769b0dc5e43a879f57ddab3f004cee",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# The lines below will show you a hint or the solution.\n#step_1.hint() \n#step_1.solution()\n",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "metadata": {
+        "_uuid": "adf8fa46c332aee190da25ce85d59432747baa75"
+      },
+      "cell_type": "markdown",
+      "source": "## Step 2: Create X\nNow you will create a DataFrame called `X` holding the predictive features.\n\nSince you want only some columns from the original data, you'll first create a list with the names of the columns you want in `X`.\n\nYou'll use just the following columns in the list (you can copy and paste the whole list to save some typing, though you'll still need to add quotes):\n    * LotArea\n    * YearBuilt\n    * 1stFlrSF\n    * 2ndFlrSF\n    * FullBath\n    * BedroomAbvGr\n    * TotRmsAbvGrd\n\nAfter you've created that list of features, use it to create the DataFrame that you'll use to fit the model."
+    },
+    {
+      "metadata": {
+        "_uuid": "c9e153f9191854a3625a428cad486947f72ddcad",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# Create the list of features below\nfeature_names = [\"LotArea\", \"YearBuilt\", \"1stFlrSF\", \"2ndFlrSF\", \"FullBath\", \"BedroomAbvGr\", \"TotRmsAbvGrd\"]\n\n# select data corresponding to features in feature_names\nX = home_data[feature_names]\n\nstep_2.check()",
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "<IPython.core.display.Javascript object>",
+            "application/javascript": "parent.postMessage({\"jupyterEvent\": \"custom.exercise_interaction\", \"data\": {\"outcomeType\": 1, \"valueTowardsCompletion\": 0.25, \"interactionType\": 1, \"learnTutorialId\": 84, \"questionId\": \"2_SelectPredictionData\", \"learnToolsVersion\": \"0.2.5\", \"failureMessage\": \"\", \"exceptionClass\": \"\", \"trace\": \"\"}}, \"*\")"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "Correct",
+            "text/markdown": "<span style=\"color:#33cc33\">Correct</span>"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "564b87a79130ebce3cbcdba3af020bebe3da8d27",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "#step_2.hint()\n#step_2.solution()",
+      "execution_count": 16,
+      "outputs": []
+    },
+    {
+      "metadata": {
+        "_uuid": "818716484607cbbd3b48b60c84c7e2d814f35f60"
+      },
+      "cell_type": "markdown",
+      "source": "## Review Data\nBefore building a model, take a quick look at **X** to verify it looks sensible"
+    },
+    {
+      "metadata": {
+        "_uuid": "1089eef6a5711d67d129c67fb9c71c3d41d3c0d7",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# Review data\n# print description or statistics from X\nprint(X.describe)\n\n# print the top few lines\nprint(X.head)\n",
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": "<bound method NDFrame.describe of       LotArea  YearBuilt      ...       BedroomAbvGr  TotRmsAbvGrd\n0        8450       2003      ...                  3             8\n1        9600       1976      ...                  3             6\n2       11250       2001      ...                  3             6\n3        9550       1915      ...                  3             7\n4       14260       2000      ...                  4             9\n5       14115       1993      ...                  1             5\n6       10084       2004      ...                  3             7\n7       10382       1973      ...                  3             7\n8        6120       1931      ...                  2             8\n9        7420       1939      ...                  2             5\n10      11200       1965      ...                  3             5\n11      11924       2005      ...                  4            11\n12      12968       1962      ...                  2             4\n13      10652       2006      ...                  3             7\n14      10920       1960      ...                  2             5\n15       6120       1929      ...                  2             5\n16      11241       1970      ...                  2             5\n17      10791       1967      ...                  2             6\n18      13695       2004      ...                  3             6\n19       7560       1958      ...                  3             6\n20      14215       2005      ...                  4             9\n21       7449       1930      ...                  3             6\n22       9742       2002      ...                  3             7\n23       4224       1976      ...                  3             6\n24       8246       1968      ...                  3             6\n25      14230       2007      ...                  3             7\n26       7200       1951      ...                  3             5\n27      11478       2007      ...                  3             7\n28      16321       1957      ...                  2             6\n29       6324       1927      ...                  1             4\n...       ...        ...      ...                ...           ...\n1430    21930       2005      ...                  4             7\n1431     4928       1976      ...                  2             5\n1432    10800       1927      ...                  4             5\n1433    10261       2000      ...                  3             8\n1434    17400       1977      ...                  3             5\n1435     8400       1962      ...                  3             7\n1436     9000       1971      ...                  3             5\n1437    12444       2008      ...                  2             7\n1438     7407       1957      ...                  2             6\n1439    11584       1979      ...                  3             6\n1440    11526       1922      ...                  3            11\n1441     4426       2004      ...                  1             3\n1442    11003       2008      ...                  3            10\n1443     8854       1916      ...                  2             4\n1444     8500       2004      ...                  3             7\n1445     8400       1966      ...                  3             6\n1446    26142       1962      ...                  3             6\n1447    10000       1995      ...                  3             8\n1448    11767       1910      ...                  2             6\n1449     1533       1970      ...                  1             3\n1450     9000       1974      ...                  4             8\n1451     9262       2008      ...                  3             7\n1452     3675       2005      ...                  2             5\n1453    17217       2006      ...                  3             6\n1454     7500       2004      ...                  2             6\n1455     7917       1999      ...                  3             7\n1456    13175       1978      ...                  3             7\n1457     9042       1941      ...                  4             9\n1458     9717       1950      ...                  2             5\n1459     9937       1965      ...                  3             6\n\n[1460 rows x 7 columns]>\n<bound method NDFrame.head of       LotArea  YearBuilt      ...       BedroomAbvGr  TotRmsAbvGrd\n0        8450       2003      ...                  3             8\n1        9600       1976      ...                  3             6\n2       11250       2001      ...                  3             6\n3        9550       1915      ...                  3             7\n4       14260       2000      ...                  4             9\n5       14115       1993      ...                  1             5\n6       10084       2004      ...                  3             7\n7       10382       1973      ...                  3             7\n8        6120       1931      ...                  2             8\n9        7420       1939      ...                  2             5\n10      11200       1965      ...                  3             5\n11      11924       2005      ...                  4            11\n12      12968       1962      ...                  2             4\n13      10652       2006      ...                  3             7\n14      10920       1960      ...                  2             5\n15       6120       1929      ...                  2             5\n16      11241       1970      ...                  2             5\n17      10791       1967      ...                  2             6\n18      13695       2004      ...                  3             6\n19       7560       1958      ...                  3             6\n20      14215       2005      ...                  4             9\n21       7449       1930      ...                  3             6\n22       9742       2002      ...                  3             7\n23       4224       1976      ...                  3             6\n24       8246       1968      ...                  3             6\n25      14230       2007      ...                  3             7\n26       7200       1951      ...                  3             5\n27      11478       2007      ...                  3             7\n28      16321       1957      ...                  2             6\n29       6324       1927      ...                  1             4\n...       ...        ...      ...                ...           ...\n1430    21930       2005      ...                  4             7\n1431     4928       1976      ...                  2             5\n1432    10800       1927      ...                  4             5\n1433    10261       2000      ...                  3             8\n1434    17400       1977      ...                  3             5\n1435     8400       1962      ...                  3             7\n1436     9000       1971      ...                  3             5\n1437    12444       2008      ...                  2             7\n1438     7407       1957      ...                  2             6\n1439    11584       1979      ...                  3             6\n1440    11526       1922      ...                  3            11\n1441     4426       2004      ...                  1             3\n1442    11003       2008      ...                  3            10\n1443     8854       1916      ...                  2             4\n1444     8500       2004      ...                  3             7\n1445     8400       1966      ...                  3             6\n1446    26142       1962      ...                  3             6\n1447    10000       1995      ...                  3             8\n1448    11767       1910      ...                  2             6\n1449     1533       1970      ...                  1             3\n1450     9000       1974      ...                  4             8\n1451     9262       2008      ...                  3             7\n1452     3675       2005      ...                  2             5\n1453    17217       2006      ...                  3             6\n1454     7500       2004      ...                  2             6\n1455     7917       1999      ...                  3             7\n1456    13175       1978      ...                  3             7\n1457     9042       1941      ...                  4             9\n1458     9717       1950      ...                  2             5\n1459     9937       1965      ...                  3             6\n\n[1460 rows x 7 columns]>\n",
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "99e0a1a9271a78abeaf65df7b2511069495ed037"
+      },
+      "cell_type": "markdown",
+      "source": "## Step 3: Specify and Fit Model\nCreate a `DecisionTreeRegressor` and save it iowa_model. Ensure you've done the relevant import from sklearn to run this command.\n\nThen fit the model you just created using the data in `X` and `y` that you saved above."
+    },
+    {
+      "metadata": {
+        "_uuid": "f87d68980ee31248b74d805c34f40af25003147a",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "from sklearn.tree import DecisionTreeRegressor\n#specify the model. \n#For model reproducibility, set a numeric value for random_state when specifying the model\niowa_model = DecisionTreeRegressor(random_state=1)\n\n# Fit the model\niowa_model.fit(X,y)\n\nstep_3.check()",
+      "execution_count": 24,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "<IPython.core.display.Javascript object>",
+            "application/javascript": "parent.postMessage({\"jupyterEvent\": \"custom.exercise_interaction\", \"data\": {\"outcomeType\": 1, \"valueTowardsCompletion\": 0.25, \"interactionType\": 1, \"learnTutorialId\": 84, \"questionId\": \"3_CreateModel\", \"learnToolsVersion\": \"0.2.5\", \"failureMessage\": \"\", \"exceptionClass\": \"\", \"trace\": \"\"}}, \"*\")"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "Correct",
+            "text/markdown": "<span style=\"color:#33cc33\">Correct</span>"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "08a105ef9a36a3651a7e5e3e788da790b662d0c5",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "#step_3.hint()\n#step_3.solution()",
+      "execution_count": 25,
+      "outputs": []
+    },
+    {
+      "metadata": {
+        "_uuid": "6df21f90bfb0c33872c80a9e196acfcbac82748a"
+      },
+      "cell_type": "markdown",
+      "source": "## Step 4: Make Predictions\nMake predictions with the model's `predict` command using `X` as the data. Save the results to a variable called `predictions`."
+    },
+    {
+      "metadata": {
+        "_uuid": "5e4f484886687588bc7d7b771e860f9ae9ddb3fe",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "predictions = iowa_model.predict(X)\nprint(predictions)\nstep_4.check()",
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": "[208500. 181500. 223500. ... 266500. 142125. 147500.]\n",
+          "name": "stdout"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "<IPython.core.display.Javascript object>",
+            "application/javascript": "parent.postMessage({\"jupyterEvent\": \"custom.exercise_interaction\", \"data\": {\"outcomeType\": 1, \"valueTowardsCompletion\": 0.25, \"interactionType\": 1, \"learnTutorialId\": 84, \"questionId\": \"4_MakePredictions\", \"learnToolsVersion\": \"0.2.5\", \"failureMessage\": \"\", \"exceptionClass\": \"\", \"trace\": \"\"}}, \"*\")"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "Correct",
+            "text/markdown": "<span style=\"color:#33cc33\">Correct</span>"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "_uuid": "c99966d85da58724ce36c5f81e0ee6e5a4bbfe08",
+        "trusted": true
+      },
+      "cell_type": "code",
+      "source": "# step_4.hint()\n# step_4.solution()",
+      "execution_count": 28,
+      "outputs": []
+    },
+    {
+      "metadata": {
+        "_uuid": "c5a5704f1254aaf072d4e0460f200bd67564aa02"
+      },
+      "cell_type": "markdown",
+      "source": "## Think About Your Results\n\nUse the `head` method to compare the top few predictions to the actual home values (in `y`) for those same homes. Anything surprising?\n\nYou'll understand why this happened if you keep going."
+    },
+    {
+      "metadata": {
+        "_uuid": "1e9923b4f8442e5e707d120b7bde712df68610b2"
+      },
+      "cell_type": "markdown",
+      "source": "\n## Keep Going\nYou've built a decision tree model.  It's natural to ask how accurate the model's predictions will be and how you can improve that. Learn how to do that with **[Model Validation](https://www.kaggle.com/dansbecker/model-validation)**.\n\n---\n**[Course Home Page](https://www.kaggle.com/learn/machine-learning)**\n\n\n"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.6.6",
+      "mimetype": "text/x-python",
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "pygments_lexer": "ipython3",
+      "nbconvert_exporter": "python",
+      "file_extension": ".py"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 1
+}
