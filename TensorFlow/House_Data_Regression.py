@@ -1,11 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
 import tensorflow as tf
-from tensorflow import keras
 
 import numpy as np  
 
-boston_housing = keras.datasets.boston_housing
+boston_housing = tf.keras.datasets.boston_housing
 
 (train_data, train_labels), (test_data, test_labels) = boston_housing.load_data()
 
