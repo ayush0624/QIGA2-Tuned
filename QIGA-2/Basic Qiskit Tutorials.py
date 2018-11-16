@@ -2,6 +2,7 @@ from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, QuantumPr
 from qiskit import execute
 from qiskit.tools.visualization import circuit_drawer
 import Qconfig
+from qiskit import Aer
 
 qp = QuantumProgram()
 qp.set_api(Qconfig.APItoken, Qconfig.config["url"]) # set the APIToken and API url
