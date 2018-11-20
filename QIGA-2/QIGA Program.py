@@ -8,10 +8,15 @@ qp = QuantumProgram()
 qp.set_api(Qconfig.APItoken, Qconfig.config["url"]) # set the APIToken and API url
 
 # set up quantum registers
+num_individuals = 10
+num_rows = 10
 
-qr = qp.create_quantum_register('qr', 3)
-cr = qp.create_classical_register('cr', 16)
-qc = qp.create_circuit('simons algorithm', [qr], [cr])
+for x in range (0,num_individuals):
+    for y in range (0, num_rows):
+        qr = qp.create_quantum_register('qr', 3)
+
+    
+
 
 
 
