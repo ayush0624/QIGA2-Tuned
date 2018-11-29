@@ -8,12 +8,15 @@ qp = QuantumProgram()
 qp.set_api(Qconfig.APItoken, Qconfig.config["url"]) # set the APIToken and API url
 
 # set up quantum registers
-num_individuals = 10
-num_rows = 10
+qubit_number = 2
+register_number = 10
 
-for x in range (0,num_individuals):
-    for y in range (0, num_rows):
-        qr = qp.create_quantum_register('qr', 3)
+registers = [qiskit.QuantumRegister(qubit_number) for i in range(register_number)]
+qc = qiskit.QuantumCircuit(*registers)
+
+for qr in registers:
+    qc.h(qr)
+
 
     
 
