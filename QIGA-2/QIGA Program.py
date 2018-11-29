@@ -12,20 +12,23 @@ qubit_number = 2
 register_number = 10
 
 registers = [qiskit.QuantumRegister(qubit_number) for i in range(register_number)]
+classicalregisters = [qiskit.ClassicalRegister(qubit_number) for i in range(register_number)]
 qc = qiskit.QuantumCircuit(*registers)
 
+
+#superposition and measurement
 for qr in registers:
-    qc.h(qr)
-
-
-    
-
+    for cr in classicalregisters:
+        qc.h(qr)
+        qc.measure(qr, cr)
 
 
 
-# measure
-for j in range(16):
-    qc.measure(qr[j], cr[j])
+#Knapsack function
+
+def knapsack():
+    print("my function")
+
 
 # run, parallelize, and get results
 results = qp.execute(["smiley_writer"], backend='ibmqx5', shots=1024)
