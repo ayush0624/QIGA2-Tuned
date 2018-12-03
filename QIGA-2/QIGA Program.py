@@ -21,6 +21,7 @@ for qr in registers:
     for cr in classicalregisters:
         qc.h(qr)
         qc.measure(qr, cr)
+        print(cr)
 
 
 

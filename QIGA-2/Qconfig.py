@@ -4,7 +4,6 @@
 # token string. Uncomment the APItoken variable, and you will be ready to go.
 
 APItoken = '5b2f71479eae0159258df0ece626df4f137a6fa7126058500c086b17aa23333b244c003475c8b7f1c2c162c52fc81f2d272d300881e872cf1ba28a3060afe090'
-
 config = {
     'url': 'https://quantumexperience.ng.bluemix.net/api',
 
