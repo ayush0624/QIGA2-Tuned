@@ -1,8 +1,11 @@
-from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, QuantumProgram
-from qiskit import execute
+from qiskit import ClassicalRegister, QuantumProgram
+from qiskit import QuantumRegister, QuantumCircuit, Aer, execute
 from qiskit.tools.visualization import circuit_drawer
 import Qconfig
-from qiskit import Aer
+from qiskit.tools.visualization import plot_histogram
+
+
+
 
 qp = QuantumProgram()
 qp.set_api(Qconfig.APItoken, Qconfig.config["url"]) # set the APIToken and API url
@@ -23,7 +26,11 @@ for qr in registers:
         qc.measure(qr, cr)
         print(cr)
 
-
+#determining probability amplitudes        
+simulator = Aer.backends(name='statevector_simulator')[0]
+results = qp.execute(qc, simulator, shots=1024)
+result = job.result()
+result.get_statevector()
 
 #Knapsack function
 
@@ -32,8 +39,5 @@ def knapsack():
 
 
 # run, parallelize, and get results
-results = qp.execute(["smiley_writer"], backend='ibmqx5', shots=1024)
-stats = results.get_counts("smiley_writer")
-
-
- 
+backend = Aer.get_backend('imbqx5')
+results = qp.execute(qc, backend, shots=1024)
