@@ -1,5 +1,5 @@
 from qiskit import ClassicalRegister, QuantumProgram
-from qiskit import QuantumRegister, QuantumCircuit, Aer, execute
+from qiskit import QuantumRegister, QuantumCircuit, BasicAer, execute
 from qiskit.tools.visualization import circuit_drawer
 import Qconfig
 from qiskit.tools.visualization import plot_histogram
