@@ -1,16 +1,17 @@
 from qiskit import QuantumRegister, ClassicalRegister
-from qiskit import QuantumCircuit, execute, Aer, IBMQ
-from qiskit.providers.aer import noise
+from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 
 # Choose a real device to simulate
+APItoken = '5b2f71479eae0159258df0ece626df4f137a6fa7126058500c086b17aa23333b244c003475c8b7f1c2c162c52fc81f2d272d300881e872cf1ba28a3060afe090'
+url = 'https://quantumexperience.ng.bluemix.net/api'
+
+IBMQ.enable_account(APItoken, url=url)
 IBMQ.load_accounts()
-device = IBMQ.get_backend('ibmqx5')
-properties = device.properties()
+realBackend = IBMQ.backends(name='ibmqx2')[0]
+device = IBMQ.get_backend(realBackend)
 coupling_map = device.configuration().coupling_map
 
-# Generate an Aer noise model for device
-noise_model = noise.device.basic_device_noise_model(properties)
-basis_gates = noise_model.basis_gates
+
 
 # Generate a quantum circuit
 q = QuantumRegister(2)
@@ -22,11 +23,9 @@ qc.cx(q[0], q[1])
 qc.measure(q, c)
 
 # Perform noisy simulation
-backend = Aer.get_backend('qasm_simulator')
-job_sim = execute(qc, backend,
-                  coupling_map=coupling_map,
-                  noise_model=noise_model,
-                  basis_gates=basis_gates)
+backend = BasicAer.get_backend('qasm_simulator')
+job_sim = execute(qc, realBackend,
+                  coupling_map=coupling_map)
 sim_result = job_sim.result()
 
 print(sim_result.get_counts(qc))
