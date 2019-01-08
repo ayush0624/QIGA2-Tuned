@@ -1,5 +1,5 @@
 from qiskit import ClassicalRegister, QuantumProgram
-from qiskit import QuantumRegister, QuantumCircuit, , execute
+from qiskit import QuantumRegister, QuantumCircuit,BasicAer , execute
 from qiskit.tools.visualization import circuit_drawer
 import Qconfig
 from qiskit.tools.visualization import plot_histogram
@@ -27,7 +27,7 @@ for qr in registers:
         print(cr)
 
 #determining probability amplitudes        
-simulator = Aer.backends(name='statevector_simulator')[0]
+simulator = BasicAer.backends(name='statevector_simulator')[0]
 results = qp.execute(qc, simulator, shots=1024)
 result = job.result()
 result.get_statevector()
@@ -39,5 +39,5 @@ def knapsack():
 
 
 # run, parallelize, and get results
-backend = Aer.get_backend('imbqx5')
+backend = BasicAer.get_backend('imbqx5')
 results = qp.execute(qc, backend, shots=1024)
