@@ -2,7 +2,6 @@ from qiskit import QuantumRegister, ClassicalRegister
 from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 from qiskit.providers.aer import noise
 from qiskit.tools.visualization import circuit_drawer
-import Qconfig
 from qiskit.tools.visualization import plot_histogram
 
 #create the first quantum program
@@ -44,9 +43,10 @@ IBMQ.enable_account(APItoken, url=url)
 IBMQ.load_accounts()
 realBackend = IBMQ.backends(name='ibmqx2')[0]
 device = IBMQ.get_backend(realBackend)
+config = device.config;
 
 # run, parallelize, and get results
-job_sim = execute(qc, realBackend)
+job_sim = execute(qc, realBackend, config=config)
 sim_result = job_sim.result()
 
 print(sim_result.get_counts(qc))
