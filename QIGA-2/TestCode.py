@@ -24,7 +24,7 @@ qc.cx(q[0], q[1])
 qc.measure(q, c)
 
 # Perform noisy simulation
-backend = BasicAer.get_backend('qasm_simulator')
+backend = BasicAer.get_backend('qasm_simulator_py')
 job_sim = execute(qc, realBackend,
                   coupling_map=coupling_map)
 sim_result = job_sim.result()
