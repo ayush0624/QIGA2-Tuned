@@ -41,18 +41,49 @@ realBackend = IBMQ.backends(name='ibmq_16_melbourne')[0]
 print(realBackend)
 #device = IBMQ.get_backend(realBackend)
 
+register_count = 0
+job_results = []
 # run and parallelize
-job = execute(qc, realBackend, shots=1024, max_credits=10)
-result = job.result()
-print(result)
+for qr in registers:
+        cr = classicalregisters[register_count]
+        qc = QuantumCircuit(qr, cr)
+        job = execute(qc, realBackend, shots=1024, max_credits=10)
+        result = job.result()
+        job_results.append(result.get_counts())
+        print(result) 
+        register_count = register_count + 1
 
 register_count = 0
 profit = []
+stringVals = []
+binaryString = ""
 
 #evaluate knapsack function
 for qr in registers:
-        data = result.get_counts()[register_count] 
-        value = knapsack(data)
+        #get binary string
+        current_result = job_results[register_count]
+        DoubleZeroVal = current_result.get('00')
+        stringVals.append(DoubleZeroVal)
+        ZeroOneVal = current_result.get('01')
+        stringVals.append(ZeroOneVal)
+        OneZeroVal = current_result.get('10')
+        stringVals.append(OneZeroVal)
+        DoubleOneVal = current_result.get('11')
+        stringVals.append(DoubleOneVal)
+        stringVals.sort(reverse=True)
+        highestVal = stringVals[0]
+
+        if highestVal == DoubleOneVal:
+                binaryString = binaryString + '11'
+        elif highestVal == OneZeroVal:
+                binaryString = binaryString + '10'
+        elif highestVal == ZeroOneVal:
+                binaryString = binaryString + '01'
+        elif highestVal == DoubleZeroVal:
+                binaryString = binaryString + '00'
+        
+
+        value = knapsack(binaryString)
         profit.append(value)
         register_count = register_count + 1
 
@@ -67,7 +98,7 @@ for qr in registers:
         job_sim = execute(qc, simulator, shots=1024)
         sim_result = job_sim.result()
         sim_result.get_statevector()
-        
-            
+
+
 
 
