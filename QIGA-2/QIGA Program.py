@@ -25,7 +25,6 @@ for qr in registers:
         register_count = register_count + 1    
 
 #Knapsack function
-
 def knapsack(data):
     print("my function")
 
@@ -43,6 +42,7 @@ print(realBackend)
 
 register_count = 0
 job_results = []
+
 # run and parallelize
 for qr in registers:
         cr = classicalregisters[register_count]
@@ -53,15 +53,14 @@ for qr in registers:
         print(result) 
         register_count = register_count + 1
 
-register_count = 0
 profit = []
 stringVals = []
 binaryString = ""
+chromosomeCount = 0;
 
-#evaluate knapsack function
-for qr in registers:
+#evaluate knapsack and get string
+for current_result in job_results:
         #get binary string
-        current_result = job_results[register_count]
         DoubleZeroVal = current_result.get('00')
         stringVals.append(DoubleZeroVal)
         ZeroOneVal = current_result.get('01')
@@ -82,10 +81,13 @@ for qr in registers:
         elif highestVal == DoubleZeroVal:
                 binaryString = binaryString + '00'
         
+        chromosomeCount = chromosomeCount + 1
+        
+        if chromosomeCount % 2 != 0:
+                value = knapsack(binaryString)
+                profit.append(value)
 
-        value = knapsack(binaryString)
-        profit.append(value)
-        register_count = register_count + 1
+                binaryString = ""
 
 profit.sort(reverse=True)
 b = profit[0]
@@ -97,7 +99,7 @@ for qr in registers:
         qc = QuantumCircuit(qr, cr)
         job_sim = execute(qc, simulator, shots=1024)
         sim_result = job_sim.result()
-        sim_result.get_statevector()
+        probability_amplitude = sim_result.get_statevector()
 
 
 
