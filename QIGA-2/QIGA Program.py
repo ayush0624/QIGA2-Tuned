@@ -6,7 +6,7 @@ from qiskit.tools.visualization import plot_histogram
 # set up quantum registers
 qubit_number = 2
 register_number = 3
-register_count = 0;
+register_count = 0
 
 #Create quantum population and quantum chromosomes
 registers = [QuantumRegister(qubit_number) for i in range(register_number)]
@@ -42,12 +42,16 @@ print(realBackend)
 
 register_count = 0
 job_results = []
+coupling_map = [[0,1],[1,2],
+                      [0,3], [1,4], [2,5],
+                      [3,4], [4,5],
+                      [3,6]]
 
 # run and parallelize
 for qr in registers:
         cr = classicalregisters[register_count]
         qc = QuantumCircuit(qr, cr)
-        job = execute(qc, realBackend, shots=1024, max_credits=10)
+        job = execute(qc, realBackend, shots=1024, max_credits=10, coupling_map=coupling_map)
         result = job.result()
         job_results.append(result.get_counts())
         print(result) 
@@ -58,7 +62,6 @@ stringVals = []
 binaryString = ""
 chromosomeCount = 0;
 
-#evaluate knapsack and get string
 for current_result in job_results:
         #get binary string
         DoubleZeroVal = current_result.get('00')
@@ -80,9 +83,12 @@ for current_result in job_results:
                 binaryString = binaryString + '01'
         elif highestVal == DoubleZeroVal:
                 binaryString = binaryString + '00'
+        else:
+                return
         
         chromosomeCount = chromosomeCount + 1
-        
+
+        #evaluate knapsack 
         if chromosomeCount % 2 != 0:
                 value = knapsack(binaryString)
                 profit.append(value)
@@ -92,14 +98,53 @@ for current_result in job_results:
 profit.sort(reverse=True)
 b = profit[0]
 register_count = 0
+j = 2
+jString = "" 
 
-#determining probability amplitudes
 for qr in registers:
+        #determining probability amplitudes
         cr = classicalregisters[register_count]
         qc = QuantumCircuit(qr, cr)
-        job_sim = execute(qc, simulator, shots=1024)
+        job_sim = execute(qc, simulator)
         sim_result = job_sim.result()
         probability_amplitude = sim_result.get_statevector()
+
+        DoubleZeroRegister = probability_amplitude[0]
+        ZeroOneRegister = probability_amplitude[1]
+        OneZeroRegister = probability_amplitude[2]
+        DoubleOneRegister = probability_amplitude[3]
+
+        if register_count%2 == 0:
+                jString = b[:j]
+        else:
+                jString = b[j:]
+
+        if jString == '00':
+                DoubleZeroRegister = 0.95(DoubleZeroRegister)
+        elif jString == '01':
+                ZeroOneRegister = 0.95(ZeroOneRegister)
+        elif jString == '10':
+                OneZeroRegister = 0.95(OneZeroRegister)
+        elif jString = '11':
+                DoubleOneRegister = 0.95(DoubleOneRegister)
+        else:
+                return
+
+        
+
+
+
+        
+
+
+
+
+
+
+
+
+
+        
 
 
 
