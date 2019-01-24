@@ -5,7 +5,7 @@ from qiskit.tools.visualization import plot_histogram
 
 # set up quantum registers
 qubit_number = 2
-register_number = 3
+register_number = 7
 register_count = 0
 
 #Create quantum population and quantum chromosomes
@@ -34,33 +34,34 @@ url = 'https://quantumexperience.ng.bluemix.net/api'
 
 IBMQ.enable_account(APItoken, url=url)
 IBMQ.load_accounts()
-print(IBMQ.backends(name='ibmq_16_melbourne', operational=True))
+print(IBMQ.backends(name='ibmq_qasm_simulator', operational=True))
 print(IBMQ.backends())
-realBackend = IBMQ.backends(name='ibmq_16_melbourne')[0]
+realBackend = IBMQ.backends(name='ibmq_qasm_simulator', operational=True)[0]
 print(realBackend)
 #device = IBMQ.get_backend(realBackend)
 
 register_count = 0
 job_results = []
-coupling_map = [[0,1],[1,2],
-                      [0,3], [1,4], [2,5],
-                      [3,4], [4,5],
-                      [3,6]]
+myMap = [[0, 1], [1, 2],
+                 [0, 3], [1, 4], [2, 5],
+                 [3, 4], [4, 5],
+                 [3, 6]]
 
 # run and parallelize
 for qr in registers:
         cr = classicalregisters[register_count]
         qc = QuantumCircuit(qr, cr)
-        job = execute(qc, realBackend, shots=1024, max_credits=10, coupling_map=coupling_map)
+        job = execute(qc, realBackend, coupling_map=myMap)
+        job.monitor()
         result = job.result()
-        job_results.append(result.get_counts())
+        job_results.append(result.get_counts(qc))
         print(result) 
         register_count = register_count + 1
 
 profit = []
 stringVals = []
 binaryString = ""
-chromosomeCount = 0;
+chromosomeCount = 0
 
 for current_result in job_results:
         #get binary string
@@ -83,8 +84,6 @@ for current_result in job_results:
                 binaryString = binaryString + '01'
         elif highestVal == DoubleZeroVal:
                 binaryString = binaryString + '00'
-        else:
-                return
         
         chromosomeCount = chromosomeCount + 1
 
@@ -125,10 +124,8 @@ for qr in registers:
                 ZeroOneRegister = 0.95(ZeroOneRegister)
         elif jString == '10':
                 OneZeroRegister = 0.95(OneZeroRegister)
-        elif jString = '11':
+        elif jString == '11':
                 DoubleOneRegister = 0.95(DoubleOneRegister)
-        else:
-                return
 
         
 
