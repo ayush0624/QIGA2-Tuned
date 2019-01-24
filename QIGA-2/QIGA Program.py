@@ -5,12 +5,14 @@ from qiskit.tools.visualization import plot_histogram
 
 # set up quantum registers
 qubit_number = 2
-register_number = 7
+register_number = 4
 register_count = 0
 
 #Create quantum population and quantum chromosomes
 registers = [QuantumRegister(qubit_number) for i in range(register_number)]
 classicalregisters = [ClassicalRegister(qubit_number) for i in range(register_number)]
+print(registers)
+print(classicalregisters)
 
 
 #Set up Probability Amplitude Simulator
@@ -42,10 +44,9 @@ print(realBackend)
 
 register_count = 0
 job_results = []
-myMap = [[0, 1], [1, 2],
-                 [0, 3], [1, 4], [2, 5],
-                 [3, 4], [4, 5],
-                 [3, 6]]
+myMap = [[0, 1], [1, 2], [2, 3],
+                 [0, 4], [1, 5], [2, 6], [3, 7],
+                 [4, 5], [5, 6], [6, 7]]
 
 # run and parallelize
 for qr in registers:
@@ -118,14 +119,7 @@ for qr in registers:
         else:
                 jString = b[j:]
 
-        if jString == '00':
-                DoubleZeroRegister = 0.95(DoubleZeroRegister)
-        elif jString == '01':
-                ZeroOneRegister = 0.95(ZeroOneRegister)
-        elif jString == '10':
-                OneZeroRegister = 0.95(OneZeroRegister)
-        elif jString == '11':
-                DoubleOneRegister = 0.95(DoubleOneRegister)
+       
 
         
 
