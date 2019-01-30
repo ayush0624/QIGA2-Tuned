@@ -2,11 +2,27 @@ from qiskit import QuantumRegister, ClassicalRegister
 from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 from qiskit.tools.visualization import circuit_drawer
 from qiskit.tools.visualization import plot_histogram
+from qiskit.mapper import CouplingMap, Layout
 
 # set up quantum registers
 qubit_number = 2
 register_number = 4
 register_count = 0
+
+# Choose a real device 
+APItoken = '5b2f71479eae0159258df0ece626df4f137a6fa7126058500c086b17aa23333b244c003475c8b7f1c2c162c52fc81f2d272d300881e872cf1ba28a3060afe090'
+url = 'https://quantumexperience.ng.bluemix.net/api'
+
+#Choose Device
+IBMQ.enable_account(APItoken, url=url)
+IBMQ.load_accounts()
+print(IBMQ.backends(name='ibmq_qasm_simulator', operational=True))
+print(IBMQ.backends())
+realBackend = IBMQ.backends(name='ibmq_qasm_simulator', operational=True)[0]
+print(realBackend)
+
+#Set up Probability Amplitude Simulator
+simulator = BasicAer.backends(name='statevector_simulator')[0]
 
 #Create quantum population and quantum chromosomes
 registers = [QuantumRegister(qubit_number) for i in range(register_number)]
@@ -14,51 +30,30 @@ classicalregisters = [ClassicalRegister(qubit_number) for i in range(register_nu
 print(registers)
 print(classicalregisters)
 
-
-#Set up Probability Amplitude Simulator
-simulator = BasicAer.backends(name='statevector_simulator')[0]
+job_results = []
 
 #superposition and measurement
 for qr in registers:
         cr = classicalregisters[register_count]
         qc = QuantumCircuit(qr, cr)
         qc.h(qr)
-        qc.measure(qr, cr)
-        register_count = register_count + 1    
+        meas= QuantumCircuit(qr, cr)
+        meas.measure(qr, cr)
+        register_count = register_count + 1 
+        
+        realBackend = IBMQ.backends(name='ibmq_qasm_simulator')[0]
+        circ = qc+meas
+        result = execute(circ, realBackend, shots=1000).result()
+        counts  = result.get_counts(circ)
+        job_results.append(counts)
+        print(counts)
+        plot_histogram(counts)  
 
 #Knapsack function
 def knapsack(data):
     print("my function")
 
-# Choose a real device 
-APItoken = '5b2f71479eae0159258df0ece626df4f137a6fa7126058500c086b17aa23333b244c003475c8b7f1c2c162c52fc81f2d272d300881e872cf1ba28a3060afe090'
-url = 'https://quantumexperience.ng.bluemix.net/api'
-
-IBMQ.enable_account(APItoken, url=url)
-IBMQ.load_accounts()
-print(IBMQ.backends(name='ibmq_qasm_simulator', operational=True))
-print(IBMQ.backends())
-realBackend = IBMQ.backends(name='ibmq_qasm_simulator', operational=True)[0]
-print(realBackend)
-#device = IBMQ.get_backend(realBackend)
-
 register_count = 0
-job_results = []
-myMap = [[0, 1], [1, 2], [2, 3],
-                 [0, 4], [1, 5], [2, 6], [3, 7],
-                 [4, 5], [5, 6], [6, 7]]
-
-# run and parallelize
-for qr in registers:
-        cr = classicalregisters[register_count]
-        qc = QuantumCircuit(qr, cr)
-        job = execute(qc, realBackend, coupling_map=myMap)
-        job.monitor()
-        result = job.result()
-        job_results.append(result.get_counts(qc))
-        print(result) 
-        register_count = register_count + 1
-
 profit = []
 stringVals = []
 binaryString = ""
