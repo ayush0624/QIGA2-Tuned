@@ -44,8 +44,8 @@ for x in weight_count:
         w_o = int((random.random() * 9) + 1)
         p_o = w_i + 5
 
-        weightVals.append(w_i)
-        profitVals.append(p_i)
+        weightVals.append(w_o)
+        profitVals.append(p_o)
 
 #superposition and measurement
 for qr in registers:
