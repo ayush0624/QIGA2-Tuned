@@ -3,10 +3,12 @@ from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 from qiskit.tools.visualization import circuit_drawer
 from qiskit.tools.visualization import plot_histogram
 from qiskit.mapper import CouplingMap, Layout
+import random
 
 # set up quantum registers
 qubit_number = 2
 register_number = 4
+weight_count = register_number/2
 register_count = 0
 
 # Choose a real device 
@@ -31,6 +33,19 @@ print(registers)
 print(classicalregisters)
 
 job_results = []
+weightVals = []
+profitVals = []
+totalWeight = 0
+w_o = 0
+p_o = 0
+cap = 0
+
+for x in weight_count:
+        w_o = int((random.random() * 9) + 1)
+        p_o = w_i + 5
+
+        weightVals.append(w_i)
+        profitVals.append(p_i)
 
 #superposition and measurement
 for qr in registers:
@@ -47,17 +62,34 @@ for qr in registers:
         counts  = result.get_counts(circ)
         job_results.append(counts)
         print(counts)
-        plot_histogram(counts)  
+        plot_histogram(counts)
+        
+print(job_results)
 
 #Knapsack function
-def knapsack(data):
-    print("my function")
+def knapsack(data, weight, p):
+    profitVals.append(p)
+    weightVals.append(weight)
+
+    totalWeight = sum(weightVals)
+
+    functionVal = p * data
+    cap = 0.5 * totalWeight
+
+    if(functionVal > cap):
+        functionVal = 0
+
+    return functionVal
+
 
 register_count = 0
 profit = []
 stringVals = []
 binaryString = ""
 chromosomeCount = 0
+weights = 0
+p_i = 0
+w_i = 0
 
 for current_result in job_results:
         #get binary string
@@ -81,38 +113,51 @@ for current_result in job_results:
         elif highestVal == DoubleZeroVal:
                 binaryString = binaryString + '00'
         
+        
         chromosomeCount = chromosomeCount + 1
 
+        print(chromosomeCount)
+
         #evaluate knapsack 
-        if chromosomeCount % 2 != 0:
-                value = knapsack(binaryString)
+        if chromosomeCount % 2 == 0:
+                print(binaryString)
+                p_i = weightVals[weights]
+                w_i = profitVals[weights]
+
+                binaryVal = int(binaryString,2)
+                print("binary_val" + binaryVal)
+                value = knapsack(binaryVal, w_i, p_i)
                 profit.append(value)
 
                 binaryString = ""
+                weights = weights + 1
+
 
 profit.sort(reverse=True)
+print(profit)
+
 b = profit[0]
 register_count = 0
 j = 2
 jString = "" 
 
-for qr in registers:
-        #determining probability amplitudes
-        cr = classicalregisters[register_count]
-        qc = QuantumCircuit(qr, cr)
-        job_sim = execute(qc, simulator)
-        sim_result = job_sim.result()
-        probability_amplitude = sim_result.get_statevector()
+# for qr in registers:
+#         #determining probability amplitudes
+#         cr = classicalregisters[register_count]
+#         qc = QuantumCircuit(qr, cr)
+#         job_sim = execute(qc, simulator)
+#         sim_result = job_sim.result()
+#         probability_amplitude = sim_result.get_statevector()
 
-        DoubleZeroRegister = probability_amplitude[0]
-        ZeroOneRegister = probability_amplitude[1]
-        OneZeroRegister = probability_amplitude[2]
-        DoubleOneRegister = probability_amplitude[3]
+#         DoubleZeroRegister = probability_amplitude[0]
+#         ZeroOneRegister = probability_amplitude[1]
+#         OneZeroRegister = probability_amplitude[2]
+#         DoubleOneRegister = probability_amplitude[3]
 
-        if register_count%2 == 0:
-                jString = b[:j]
-        else:
-                jString = b[j:]
+#         if register_count%2 == 0:
+#                 jString = b[:j]
+#         else:
+#                 jString = b[j:]
 
        
 
