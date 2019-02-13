@@ -8,7 +8,7 @@ import random
 # set up quantum registers
 qubit_number = 2
 register_number = 4
-weight_count = register_number/2
+weight_count = register_number//2
 register_count = 0
 
 # Choose a real device 
@@ -40,12 +40,16 @@ w_o = 0
 p_o = 0
 cap = 0
 
-for x in weight_count:
-        w_o = int((random.random() * 9) + 1)
-        p_o = w_i + 5
+for x in range(weight_count):
+        w_o = int((random.random() * 9))
+        p_o = w_o + 5
 
         weightVals.append(w_o)
         profitVals.append(p_o)
+
+
+cap = sum(weightVals)
+print(weightVals)
 
 #superposition and measurement
 for qr in registers:
@@ -66,20 +70,37 @@ for qr in registers:
         
 print(job_results)
 
+knapsackWeight = []
+knapsackProfit = []
+currentWeight = []
+currentProfit = []
+chromCount = 0
+
+for wX in range(weight_count):
+        knapsackProfit.append(0)
+        knapsackWeight.append(0)
+
 #Knapsack function
-def knapsack(data, weight, p):
-    profitVals.append(p)
-    weightVals.append(weight)
+def knapsack(data, weight, p, chromoCount):
+    currentWeight = knapsackWeight[chromoCount]  
+    print('currentWeight',currentWeight)
+    currentProfit = knapsackProfit[chromoCount]  
+    print('currentProfit',currentProfit)
 
-    totalWeight = sum(weightVals)
+    profit = p * data
 
-    functionVal = p * data
-    cap = 0.5 * totalWeight
+    knapsackWeight[chromoCount] = currentWeight + weight
+    print('profit',profit)
+    knapsackProfit[chromoCount] = currentProfit + int(profit,2)
+    print('weight',weight)
+    print('cap',cap)
 
-    if(functionVal > cap):
-        functionVal = 0
 
-    return functionVal
+    if knapsackWeight[chromoCount] > cap:
+        knapsackWeight[chromoCount] =  currentWeight
+        knapsackProfit[chromoCount] = currentProfit
+
+    return knapsackProfit[chromoCount]
 
 
 register_count = 0
@@ -91,7 +112,8 @@ weights = 0
 p_i = 0
 w_i = 0
 
-for current_result in job_results:
+for c in range(len(job_results) + 1):
+        current_result = job_results[c]
         #get binary string
         DoubleZeroVal = current_result.get('00')
         stringVals.append(DoubleZeroVal)
@@ -121,16 +143,23 @@ for current_result in job_results:
         #evaluate knapsack 
         if chromosomeCount % 2 == 0:
                 print(binaryString)
+
                 p_i = weightVals[weights]
                 w_i = profitVals[weights]
 
-                binaryVal = int(binaryString,2)
-                print("binary_val" + binaryVal)
-                value = knapsack(binaryVal, w_i, p_i)
+                binaryVal = binaryString
+                #binaryVal = format(binaryVal, 'b')
+
+                print('binary_val',binaryVal)
+                value = knapsack(binaryVal, w_i, p_i, chromCount)
                 profit.append(value)
 
                 binaryString = ""
                 weights = weights + 1
+                chromCount = chromCount + 1
+
+chromCount = 0
+chromosomeCount = 0
 
 
 profit.sort(reverse=True)
