@@ -79,19 +79,21 @@ chromCount = 0
 for wX in range(weight_count):
         knapsackProfit.append(0)
         knapsackWeight.append(0)
+        currentProfit.append(0)
+        currentWeight.append(0)
 
 #Knapsack function
 def knapsack(data, weight, p, chromoCount):
-    currentWeight = knapsackWeight[chromoCount]  
+    currentWeight[chromoCount] = knapsackWeight[chromoCount]  
     print('currentWeight',currentWeight)
-    currentProfit = knapsackProfit[chromoCount]  
+    currentProfit[chromoCount] = knapsackProfit[chromoCount]  
     print('currentProfit',currentProfit)
 
     profit = p * int(data,2)
 
-    knapsackWeight[chromoCount] = currentWeight + weight
+    knapsackWeight[chromoCount] = currentWeight[chromoCount] + weight
     print('profit',profit)
-    knapsackProfit[chromoCount] = currentProfit + profit
+    knapsackProfit[chromoCount] = currentProfit[chromoCount] + profit
     print('weight',weight)
     print('cap',cap)
 
