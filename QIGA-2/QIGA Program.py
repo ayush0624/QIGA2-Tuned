@@ -87,11 +87,11 @@ def knapsack(data, weight, p, chromoCount):
     currentProfit = knapsackProfit[chromoCount]  
     print('currentProfit',currentProfit)
 
-    profit = p * data
+    profit = p * int(data,2)
 
     knapsackWeight[chromoCount] = currentWeight + weight
     print('profit',profit)
-    knapsackProfit[chromoCount] = currentProfit + int(profit,2)
+    knapsackProfit[chromoCount] = currentProfit + profit
     print('weight',weight)
     print('cap',cap)
 
@@ -170,6 +170,9 @@ b = profit[0]
 register_count = 0
 j = 2
 jString = "" 
+
+#TODO: binary string from multiple chromosomes are being used to calculate the profit. 
+#Find out how to isolate one binary string instead of clumping all of them together
 
 # for qr in registers:
 #         #determining probability amplitudes
