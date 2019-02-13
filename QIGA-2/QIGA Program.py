@@ -111,6 +111,7 @@ chromosomeCount = 0
 weights = 0
 p_i = 0
 w_i = 0
+randInt = 0
 
 for c in range(len(job_results) + 1):
         current_result = job_results[c]
@@ -143,9 +144,10 @@ for c in range(len(job_results) + 1):
         #evaluate knapsack 
         if chromosomeCount % 2 == 0:
                 print(binaryString)
+                randInt = random.randint(0,weight_count - 1)
 
-                p_i = weightVals[weights]
-                w_i = profitVals[weights]
+                p_i = weightVals[randInt]
+                w_i = profitVals[randInt]
 
                 binaryVal = binaryString
                 #binaryVal = format(binaryVal, 'b')
@@ -155,7 +157,6 @@ for c in range(len(job_results) + 1):
                 profit.append(value)
 
                 binaryString = ""
-                weights = weights + 1
                 chromCount = chromCount + 1
 
 chromCount = 0
@@ -187,25 +188,3 @@ jString = ""
 #                 jString = b[:j]
 #         else:
 #                 jString = b[j:]
-
-       
-
-        
-
-
-
-        
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
