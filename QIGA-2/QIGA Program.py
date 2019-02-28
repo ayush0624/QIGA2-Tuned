@@ -41,7 +41,7 @@ p_o = 0
 cap = 0
 
 for x in range(weight_count):
-        w_o = int((random.random() * 9))
+        w_o = int((random.random() * 9) + 1)
         p_o = w_o + 5
 
         weightVals.append(w_o)
@@ -51,130 +51,128 @@ for x in range(weight_count):
 cap = sum(weightVals)
 print(weightVals)
 
-#superposition and measurement
-for qr in registers:
-        cr = classicalregisters[register_count]
-        qc = QuantumCircuit(qr, cr)
-        qc.h(qr)
-        meas= QuantumCircuit(qr, cr)
-        meas.measure(qr, cr)
-        register_count = register_count + 1 
-        
-        realBackend = IBMQ.backends(name='ibmq_qasm_simulator')[0]
-        circ = qc+meas
-        result = execute(circ, realBackend, shots=1000).result()
-        counts  = result.get_counts(circ)
-        job_results.append(counts)
-        print(counts)
-        plot_histogram(counts)
-        
-print(job_results)
+for x in range(10):
+        #superposition and measurement
+        for qr in registers:
+                cr = classicalregisters[register_count]
+                qc = QuantumCircuit(qr, cr)
+                qc.h(qr)
+                meas= QuantumCircuit(qr, cr)
+                meas.measure(qr, cr)
+                register_count = register_count + 1 
+                
+                realBackend = IBMQ.backends(name='ibmq_qasm_simulator')[0]
+                circ = qc+meas
+                result = execute(circ, realBackend, shots=1000).result()
+                counts  = result.get_counts(circ)
+                job_results.append(counts)
+                print(counts)
+                plot_histogram(counts)
+                
+        print(job_results)
 
-knapsackWeight = []
-knapsackProfit = []
-currentWeight = []
-currentProfit = []
-chromCount = 0
+        knapsackWeight = []
+        knapsackProfit = []
+        currentWeight = []
+        currentProfit = []
+        chromCount = 0
 
-for wX in range(weight_count):
-        knapsackProfit.append(0)
-        knapsackWeight.append(0)
-        currentProfit.append(0)
-        currentWeight.append(0)
+        for wX in range(weight_count):
+                knapsackProfit.append(0)
+                knapsackWeight.append(0)
+                currentProfit.append(0)
+                currentWeight.append(0)
 
-#Knapsack function
-def knapsack(data, weight, p, chromoCount):
-    currentWeight[chromoCount] = knapsackWeight[chromoCount]  
-    print('currentWeight',currentWeight)
-    currentProfit[chromoCount] = knapsackProfit[chromoCount]  
-    print('currentProfit',currentProfit)
+        #Knapsack function
+        def knapsack(data, weight, p, chromoCount):
+                currentWeight[chromoCount] = knapsackWeight[chromoCount]  
+                print('currentWeight',currentWeight)
+                currentProfit[chromoCount] = knapsackProfit[chromoCount]  
+                print('currentProfit',currentProfit)
 
-    profit = p * int(data,2)
+                profit = p * int(data,2)
 
-    knapsackWeight[chromoCount] = currentWeight[chromoCount] + weight
-    print('profit',profit)
-    knapsackProfit[chromoCount] = currentProfit[chromoCount] + profit
-    print('weight',weight)
-    print('cap',cap)
-
-
-    if knapsackWeight[chromoCount] > cap:
-        knapsackWeight[chromoCount] =  currentWeight
-        knapsackProfit[chromoCount] = currentProfit
-
-    return knapsackProfit[chromoCount]
+                knapsackWeight[chromoCount] = currentWeight[chromoCount] + weight
+                print('profit',profit)
+                knapsackProfit[chromoCount] = currentProfit[chromoCount] + profit
+                print('weight',weight)
+                print('cap',cap)
 
 
-register_count = 0
-profit = []
-stringVals = []
-binaryString = ""
-chromosomeCount = 0
-weights = 0
-p_i = 0
-w_i = 0
-randInt = 0
+                if knapsackWeight[chromoCount] > cap:
+                        knapsackWeight[chromoCount] =  currentWeight
+                        knapsackProfit[chromoCount] = currentProfit
 
-for c in range(len(job_results) + 1):
-        current_result = job_results[c]
-        #get binary string
-        DoubleZeroVal = current_result.get('00')
-        stringVals.append(DoubleZeroVal)
-        ZeroOneVal = current_result.get('01')
-        stringVals.append(ZeroOneVal)
-        OneZeroVal = current_result.get('10')
-        stringVals.append(OneZeroVal)
-        DoubleOneVal = current_result.get('11')
-        stringVals.append(DoubleOneVal)
-        stringVals.sort(reverse=True)
-        highestVal = stringVals[0]
-
-        if highestVal == DoubleOneVal:
-                binaryString = binaryString + '11'
-        elif highestVal == OneZeroVal:
-                binaryString = binaryString + '10'
-        elif highestVal == ZeroOneVal:
-                binaryString = binaryString + '01'
-        elif highestVal == DoubleZeroVal:
-                binaryString = binaryString + '00'
-        
-        
-        chromosomeCount = chromosomeCount + 1
-
-        print(chromosomeCount)
-
-        #evaluate knapsack 
-        if chromosomeCount % 2 == 0:
-                print(binaryString)
-                randInt = random.randint(0,weight_count - 1)
-
-                p_i = weightVals[randInt]
-                w_i = profitVals[randInt]
-
-                binaryVal = binaryString
-                #binaryVal = format(binaryVal, 'b')
-
-                print('binary_val',binaryVal)
-                value = knapsack(binaryVal, w_i, p_i, chromCount)
-                profit.append(value)
-
-                binaryString = ""
-                chromCount = chromCount + 1
-
-chromCount = 0
-chromosomeCount = 0
+                return knapsackProfit[chromoCount]
 
 
-profit.sort(reverse=True)
-print(profit)
+        register_count = 0
+        profit = []
+        stringVals = []
+        binaryString = ""
+        chromosomeCount = 0
+        weights = 0
+        p_i = 0
+        w_i = 0
+        randInt = 0
 
-b = profit[0]
-register_count = 0
-j = 2
-jString = "" 
+        for c in range(len(job_results)):
+                current_result = job_results[c]
+                #get binary string
+                DoubleZeroVal = current_result.get('00')
+                stringVals.append(DoubleZeroVal)
+                ZeroOneVal = current_result.get('01')
+                stringVals.append(ZeroOneVal)
+                OneZeroVal = current_result.get('10')
+                stringVals.append(OneZeroVal)
+                DoubleOneVal = current_result.get('11')
+                stringVals.append(DoubleOneVal)
+                stringVals.sort(reverse=True)
+                highestVal = stringVals[0]
 
-#TODO: binary string from multiple chromosomes are being used to calculate the profit. 
-#Find out how to isolate one binary string instead of clumping all of them together
+                if highestVal == DoubleOneVal:
+                        binaryString = binaryString + '11'
+                elif highestVal == OneZeroVal:
+                        binaryString = binaryString + '10'
+                elif highestVal == ZeroOneVal:
+                        binaryString = binaryString + '01'
+                elif highestVal == DoubleZeroVal:
+                        binaryString = binaryString + '00'
+                
+                
+                chromosomeCount = chromosomeCount + 1
+
+                print(chromosomeCount)
+
+                #evaluate knapsack 
+                if chromosomeCount % 2 == 0:
+                        print(binaryString)
+                        randInt = random.randint(0,weight_count - 1)
+
+                        p_i = weightVals[randInt]
+                        w_i = profitVals[randInt]
+
+                        binaryVal = binaryString
+                        #binaryVal = format(binaryVal, 'b')
+
+                        print('binary_val',binaryVal)
+                        value = knapsack(binaryVal, w_i, p_i, chromCount)
+                        profit.append(value)
+
+                        binaryString = ""
+                        chromCount = chromCount + 1
+
+        chromCount = 0
+        chromosomeCount = 0
+
+
+        profit.sort(reverse=True)
+        print(profit)
+
+        b = profit[0]
+        register_count = 0
+        j = 2
+        jString = "" 
 
 # for qr in registers:
 #         #determining probability amplitudes
