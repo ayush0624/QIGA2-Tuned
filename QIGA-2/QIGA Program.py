@@ -29,8 +29,8 @@ simulator = BasicAer.backends(name='statevector_simulator')[0]
 #Create quantum population and quantum chromosomes
 registers = [QuantumRegister(qubit_number) for i in range(register_number)]
 classicalregisters = [ClassicalRegister(qubit_number) for i in range(register_number)]
-print(registers)
-print(classicalregisters)
+#print(registers)
+#print(classicalregisters)
 
 job_results = []
 weightVals = []
@@ -49,7 +49,7 @@ for x in range(weight_count):
 
 
 cap = sum(weightVals)
-print(weightVals)
+#print(weightVals)
 
 for x in range(10):
         #superposition and measurement
@@ -80,28 +80,46 @@ for x in range(10):
         for wX in range(weight_count):
                 knapsackProfit.append(0)
                 knapsackWeight.append(0)
-                currentProfit.append(0)
-                currentWeight.append(0)
-
+                
         #Knapsack function
         def knapsack(data, weight, p, chromoCount):
-                currentWeight[chromoCount] = knapsackWeight[chromoCount]  
+
+                currentWeight = knapsackWeight.copy()
+                currentProfit = knapsackProfit.copy()
+                
+                print('chromoCount',chromoCount)
+
+                currentWeight.insert(chromoCount, knapsackWeight[chromoCount])
+                currentWeight.remove(chromoCount + 1)
+
                 print('currentWeight',currentWeight)
-                currentProfit[chromoCount] = knapsackProfit[chromoCount]  
+
+                for index in range(len(knapsackProfit) - 1):
+                        if index != chromoCount:
+                                currentProfit.remove(index)
+
                 print('currentProfit',currentProfit)
 
-                profit = p * int(data,2)
+                profit = p * data
 
-                knapsackWeight[chromoCount] = currentWeight[chromoCount] + weight
                 print('profit',profit)
-                knapsackProfit[chromoCount] = currentProfit[chromoCount] + profit
+
+                knapsackWeight.insert(chromoCount, currentWeight[0] + weight)
+                knapsackWeight.remove(chromoCount + 1)
+        
+                knapsackProfit.insert(chromoCount, currentProfit[0] + profit)
+                knapsackProfit.remove(chromoCount + 1)
+
                 print('weight',weight)
                 print('cap',cap)
 
 
                 if knapsackWeight[chromoCount] > cap:
-                        knapsackWeight[chromoCount] =  currentWeight
-                        knapsackProfit[chromoCount] = currentProfit
+                        knapsackWeight.insert(chromoCount, currentWeight[0])
+                        knapsackWeight.remove(chromoCount + 1)
+                        
+                        knapsackProfit.insert(chromoCount, currentProfit[0])
+                        knapsackProfit.remove(chromoCount + 1)
 
                 return knapsackProfit[chromoCount]
 
