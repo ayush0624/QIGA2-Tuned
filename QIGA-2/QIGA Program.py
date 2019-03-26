@@ -1,9 +1,11 @@
-from qiskit import QuantumRegister, ClassicalRegister
+ from qiskit import QuantumRegister, ClassicalRegister
 from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 from qiskit.tools.visualization import circuit_drawer
-from qiskit.tools.visualization import plot_histogram
+from qiskit.tools.visualization import iplot_histogram
+from qiskit.tools.visualization import plot_state_qsphere
 from qiskit.mapper import CouplingMap, Layout
 import random
+import numpy as np
 
 # set up quantum registers
 qubit_number = 2
@@ -32,9 +34,10 @@ classicalregisters = [ClassicalRegister(qubit_number) for i in range(register_nu
 #print(registers)
 #print(classicalregisters)
 
-job_results = []
-weightVals = []
-profitVals = []
+job_results = np.array([])
+weightVals = np.array([])
+profitVals = np.array([])
+resultVisual = np.array([])
 totalWeight = 0
 w_o = 0
 p_o = 0
@@ -44,11 +47,12 @@ for x in range(weight_count):
         w_o = int((random.random() * 9) + 1)
         p_o = w_o + 5
 
-        weightVals.append(w_o)
-        profitVals.append(p_o)
+        np.append(weightVals, w_o)
+        np.append(profitVals, p_o)
 
 
 cap = sum(weightVals)
+index = 0
 #print(weightVals)
 
 for x in range(10):
@@ -57,69 +61,60 @@ for x in range(10):
                 cr = classicalregisters[register_count]
                 qc = QuantumCircuit(qr, cr)
                 qc.h(qr)
+                
+                # execute the quantum circuit
+                
                 meas= QuantumCircuit(qr, cr)
                 meas.measure(qr, cr)
+                
+                
                 register_count = register_count + 1 
                 
                 realBackend = IBMQ.backends(name='ibmq_qasm_simulator')[0]
                 circ = qc+meas
                 result = execute(circ, realBackend, shots=1000).result()
                 counts  = result.get_counts(circ)
-                job_results.append(counts)
+                np.append(job_results, counts)
+                np.append(resultVisual, result)
                 print(counts)
-                plot_histogram(counts)
                 
-        print(job_results)
 
-        knapsackWeight = []
-        knapsackProfit = []
-        currentWeight = []
-        currentProfit = []
+        knapsackWeight = np.array([])
+        knapsackProfit = np.array([])
+        currentWeight = 0
+        currentProfit = 0
         chromCount = 0
 
         for wX in range(weight_count):
-                knapsackProfit.append(0)
-                knapsackWeight.append(0)
+                np.append(knapsackProfit, 0)
+                np.append(knapsackWeight, 0)
+                #currentWeight.append(0)
+                #currentProfit.append(0)
                 
         #Knapsack function
         def knapsack(data, weight, p, chromoCount):
-
-                currentWeight = knapsackWeight.copy()
-                currentProfit = knapsackProfit.copy()
                 
-                print('chromoCount',chromoCount)
+                currentWeight = knapsackWeight[chromoCount]
+                currentProfit = knapsackWeight[chromoCount]
 
-                currentWeight.insert(chromoCount, knapsackWeight[chromoCount])
-                currentWeight.remove(chromoCount + 1)
-
-                print('currentWeight',currentWeight)
-
-                for index in range(len(knapsackProfit) - 1):
-                        if index != chromoCount:
-                                currentProfit.remove(index)
-
-                print('currentProfit',currentProfit)
+                print('currentProfit', currentProfit)
 
                 profit = p * data
 
                 print('profit',profit)
 
-                knapsackWeight.insert(chromoCount, currentWeight[0] + weight)
-                knapsackWeight.remove(chromoCount + 1)
+                knapsackWeight[chromoCount] = currentWeight + weight
+                knapsackProfit[chromoCount] = currentProfit + profit
         
-                knapsackProfit.insert(chromoCount, currentProfit[0] + profit)
-                knapsackProfit.remove(chromoCount + 1)
 
                 print('weight',weight)
                 print('cap',cap)
 
 
                 if knapsackWeight[chromoCount] > cap:
-                        knapsackWeight.insert(chromoCount, currentWeight[0])
-                        knapsackWeight.remove(chromoCount + 1)
-                        
-                        knapsackProfit.insert(chromoCount, currentProfit[0])
-                        knapsackProfit.remove(chromoCount + 1)
+                        knapsackWeight[chromoCount] = currentWeight
+                        knapsackProfit[chromoCount] = currentProfit
+    
 
                 return knapsackProfit[chromoCount]
 
@@ -136,7 +131,7 @@ for x in range(10):
 
         for c in range(len(job_results)):
                 current_result = job_results[c]
-                #get binary string
+          
                 DoubleZeroVal = current_result.get('00')
                 stringVals.append(DoubleZeroVal)
                 ZeroOneVal = current_result.get('01')
@@ -165,7 +160,7 @@ for x in range(10):
                 #evaluate knapsack 
                 if chromosomeCount % 2 == 0:
                         print(binaryString)
-                        randInt = random.randint(0,weight_count - 1)
+                        randInt = random.randint(0, weight_count - 1)
 
                         p_i = weightVals[randInt]
                         w_i = profitVals[randInt]
