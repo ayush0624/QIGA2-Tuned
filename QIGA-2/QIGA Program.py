@@ -1,4 +1,4 @@
- from qiskit import QuantumRegister, ClassicalRegister
+from qiskit import QuantumRegister, ClassicalRegister
 from qiskit import QuantumCircuit, execute, BasicAer, IBMQ
 from qiskit.tools.visualization import circuit_drawer
 from qiskit.tools.visualization import iplot_histogram
@@ -34,7 +34,7 @@ classicalregisters = [ClassicalRegister(qubit_number) for i in range(register_nu
 #print(registers)
 #print(classicalregisters)
 
-job_results = np.array([])
+job_results = []
 weightVals = np.array([])
 profitVals = np.array([])
 resultVisual = np.array([])
@@ -47,13 +47,39 @@ for x in range(weight_count):
         w_o = int((random.random() * 9) + 1)
         p_o = w_o + 5
 
-        np.append(weightVals, w_o)
-        np.append(profitVals, p_o)
+        weightVals = np.append(weightVals, w_o)
+        profitVals = np.append(profitVals, p_o)
 
 
 cap = sum(weightVals)
 index = 0
 #print(weightVals)
+
+def knapsack(data, weight, p, chromoCount):
+    currentWeight = knapsackWeight[chromoCount]
+    currentProfit = knapsackWeight[chromoCount]
+
+    print('currentProfit', currentProfit)
+
+    profit = p * int(data, 2)
+
+    print('profit',profit)
+
+    knapsackWeight[chromoCount] = currentWeight + weight
+    knapsackProfit[chromoCount] = currentProfit + profit
+        
+
+    print('weight',weight)
+    print('cap',cap)
+
+
+    if knapsackWeight[chromoCount] > cap:
+        knapsackWeight[chromoCount] = currentWeight
+        knapsackProfit[chromoCount] = currentProfit
+    
+
+    return knapsackProfit.item(chromoCount)
+
 
 for x in range(10):
         #superposition and measurement
@@ -74,7 +100,7 @@ for x in range(10):
                 circ = qc+meas
                 result = execute(circ, realBackend, shots=1000).result()
                 counts  = result.get_counts(circ)
-                np.append(job_results, counts)
+                job_results.append(counts)
                 np.append(resultVisual, result)
                 print(counts)
                 
@@ -84,44 +110,17 @@ for x in range(10):
         currentWeight = 0
         currentProfit = 0
         chromCount = 0
+        
+        print(job_results)
 
         for wX in range(weight_count):
-                np.append(knapsackProfit, 0)
-                np.append(knapsackWeight, 0)
+                knapsackProfit = np.append(knapsackProfit, 0)
+                knapsackWeight = np.append(knapsackWeight, 0)
                 #currentWeight.append(0)
                 #currentProfit.append(0)
-                
-        #Knapsack function
-        def knapsack(data, weight, p, chromoCount):
-                
-                currentWeight = knapsackWeight[chromoCount]
-                currentProfit = knapsackWeight[chromoCount]
-
-                print('currentProfit', currentProfit)
-
-                profit = p * data
-
-                print('profit',profit)
-
-                knapsackWeight[chromoCount] = currentWeight + weight
-                knapsackProfit[chromoCount] = currentProfit + profit
-        
-
-                print('weight',weight)
-                print('cap',cap)
-
-
-                if knapsackWeight[chromoCount] > cap:
-                        knapsackWeight[chromoCount] = currentWeight
-                        knapsackProfit[chromoCount] = currentProfit
-    
-
-                return knapsackProfit[chromoCount]
-
 
         register_count = 0
         profit = []
-        stringVals = []
         binaryString = ""
         chromosomeCount = 0
         weights = 0
@@ -131,6 +130,8 @@ for x in range(10):
 
         for c in range(len(job_results)):
                 current_result = job_results[c]
+                stringVals = []
+                highestVal = 0
           
                 DoubleZeroVal = current_result.get('00')
                 stringVals.append(DoubleZeroVal)
@@ -142,6 +143,8 @@ for x in range(10):
                 stringVals.append(DoubleOneVal)
                 stringVals.sort(reverse=True)
                 highestVal = stringVals[0]
+                
+                print('highestVal', highestVal)
 
                 if highestVal == DoubleOneVal:
                         binaryString = binaryString + '11'
@@ -151,19 +154,20 @@ for x in range(10):
                         binaryString = binaryString + '01'
                 elif highestVal == DoubleZeroVal:
                         binaryString = binaryString + '00'
+                        
                 
                 
                 chromosomeCount = chromosomeCount + 1
 
-                print(chromosomeCount)
+                print('count',chromosomeCount)
 
                 #evaluate knapsack 
                 if chromosomeCount % 2 == 0:
                         print(binaryString)
                         randInt = random.randint(0, weight_count - 1)
 
-                        p_i = weightVals[randInt]
-                        w_i = profitVals[randInt]
+                        w_i = weightVals[randInt]
+                        p_i = profitVals[randInt]
 
                         binaryVal = binaryString
                         #binaryVal = format(binaryVal, 'b')
@@ -177,6 +181,9 @@ for x in range(10):
 
         chromCount = 0
         chromosomeCount = 0
+
+        originalProfit = profit
+        print(originalProfit)
 
 
         profit.sort(reverse=True)
