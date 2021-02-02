@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%ES100 Latex Template
+%Sam Meijer '19
+%Hopefully this template will serve you well.
+%It is built off many other packages and templates, but I have added my own style here and there, as you should too!
+%I will endeavour to explain some of the intricacies of LaTex as well as how to lay out an overall project.
+%Hopefully no knowledge of LaTex is required to understand this document.
+%I would highly recommend https://www.overleaf.com/learn/latex/Main_Page for further information.
+%For errata, please contact smeijer11@gmail.com.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Packages are included below, these are akin to libraries in other programming languages. As far as I can tell, there is no reason to reduce the number of packages included in a document. It might compile faster, but overleaf compiles fast so this should not be an issue.
+\documentclass[12pt,twoside, notitlepage]{article}%tells the compiler that this is a 'report' style document, and the main font size.
+\IEEEoverridecommandlockouts
+\usepackage{setspace} %allows the use of '\doublespace' to set line spacing
+\usepackage[utf8]{inputenc} %inclusion of this is optional, overleaf includes it in its compiler so it is not necessary, it may be necessary for other compilers.
+\usepackage[english]{babel} %this does a few things eg allowing dates to be made by the compiler. probably best not to get rid of it
+\usepackage{wrapfig} %if it is desirable to wrap text (see https://www.overleaf.com/learn/latex/Wrapping_text_around_figures).
+\usepackage{float}%this allows you to put them in good places
+\usepackage[version=4]{mhchem} %this is good for chemical reactions
+\usepackage{amsmath} %maths package
+\usepackage{amssymb} %symbol package
+\usepackage{amsthm}
+\newtheorem{lemma}{Lemma}
+\usepackage{booktabs,tabularx}
+% \usepackage{apacite}
+\usepackage{indentfirst}
+\usepackage{textcomp,gensymb} %more symbols (eg \degree)
+\usepackage{appendix} %self explanatory
+\usepackage{colortbl} %good for colouring in cells on a table
+\usepackage{rotating} %allows you to rotate graphics
+\usepackage{bm} %helps bold things
+\usepackage{multirow} %for tables
+\usepackage{longtable} %for long tables
+\usepackage{booktabs} %more tables
+\usepackage{pdfpages} %allows PDFs to be included in document (good if you want to include a pdf in an appendix eg)
+\usepackage{caption} %allows captions for graphics
+\usepackage[nottoc]{tocbibind} %adds the bibliography to the table of contents
+\usepackage{subcaption} %allows subcaption for multiple images in one graphic
+\usepackage{tocloft}
+\usepackage[demo]{graphicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{subfig}
+
+
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{hyperref} %this is great for putting hyperreferences in the document.
+\usepackage[table]{xcolor} %more colouring of tables
+\definecolor{Gray}{gray}{0.9} %this defines a colour to be used and gives it a name. This is a colour called 'Gray' it is 'gray' with transparency 0.9
+\input{preamble/arduinoLanguage.tex}  %I used this to format arduino code well in my report. I'm sure there are other packages/methods for other languages.
+\hypersetup{colorlinks=false} %this stops links being colourful, which makes a report look less professional I believe.
+
+%------------------------------------------------------------------------------------
+\newcommand{\eg}{\`e}
+\newcommand{\ea}{\'e}
+\newcommand{\Eg}{\`E}
+\newcommand{\og}{\`o}
+\newcommand{\ag}{\`a}
+\newcommand{\ug}{\`u}
+\newcommand{\ig}{\`{\i}}
+\newcommand{\R}{\textsf{R}}
+\newcommand{\Fortran}{\textsf{Fortran}}
+%------------------------------------------------------------------------------------
+\definecolor{MyGray}{rgb}{0.30,0.31,0.32} % definizione grigio
+\definecolor{MyDarkBlue}{rgb}{0.,0.08,0.5} % blu scuro
+\definecolor{MyLightBlue}{rgb}{0.2,0.2,1.0} % blu chiaro
+\definecolor{MyDarkRed}{rgb}{0.5,0.04,0} % rosso scuro
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.08} % verde scuro
+\definecolor{SectionBlue}{rgb}{0.16,0.32,0.75} % blu per sezioni
+\definecolor{SubSectionBlue}{rgb}{0.0,0.53,0.74} % blu per sottosezioni
+\definecolor{SubSubSectionBlue}{rgb}{0.0,0.58,0.65} % blu per sottosottosezioni
+%------------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------------
+\newcommand{\myboldverb}[1]{{\color{MyDarkBlue}\bfseries{#1}}} % per enfasi in grassetto 
+\newcommand{\myverb}[1]{{\color{MyDarkBlue}\texttt{#1}}} % in evidenza
+\newcommand{\myurl}[1]{{\color{MyDarkGreen}\url{#1}}} % per url
+\newcommand{\quotesection}[1]{{\color{SectionBlue}\textbf{Sezione \ref{#1}}}}
+\newcommand{\quotesubsection}[1]{{\color{SubSectionBlue}\textbf{Sezione \ref{#1}}}}
+\newcommand{\quotesubsubsection}[1]{{\color{SubSubSectionBlue}\textbf{Sezione \ref{#1}}}}
+\newcommand{\quotefigure}[1]{{\color{MyDarkGreen}\textbf{Figura \ref{#1}}}}
+\newcommand{\quotetable}[1]{{\color{MyDarkGreen}\textbf{Tabella \ref{#1}}}}
+%------------------------------------------------------------------------------------
+\usepackage[letterpaper, top=1in, bottom = 1in, right = 1in]{geometry} %this describes the layout of the document and the margins etc.
+% \doublespacing %self explanatory
+
+\setlength\cftparskip{-2pt}
+\setlength\cftbeforesecskip{0.5pt}
+% \setlength\cftaftertoctitleskip{2pt}
+
+\begin{document} % you have to do this to start the document
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%For a long report such as a thesis, I would recommend thinking like programming, that is, have a short 'main' and long programs (or chapters in this case) this allows you to access each chapter easily and see the layout of the document easily.
+%
+%using \input{} basically puts the code specified in the argument (between the braces) into the body of the code in main
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The entire thesis is generated by the commands below, referencing the other files in this directory.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newgeometry{margin=0.8in}
+\input{preamble/titlepage.tex}
+\restoregeometry
+\pagenumbering{roman} %Roman numbering is recommended until the body
+\begin{doublespacing}
+{
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+}
+\end{doublespacing}
+\newpage
+\input{preamble/abstract.tex} 
+\newpage
+\newpage
+\input{preamble/acknowledgements.tex}
+\newpage
+
+\pagenumbering{arabic} %back to Arabic numbering for the rest
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\setstretch{1.15}
+\input{chapters/01background.tex}
+\input{chapters/02procedure}
+\input{chapters/03results}
+\input{chapters/04analysis}
+\input{chapters/05conclusion}
+}
+
+
+% \newpage
+% \input{chapters/02images.tex}
+
+% \input{chapters/03references.tex}
+
+% \input{chapters/04maths.tex}
+
+% \input{chapters/05usingoverleaf.tex}
+\newpage
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textcolor{white}{\cite{birkett_how_nodate} \cite{nowotniak_gpu-based_2012} \cite{montanaro_quantum_2016}}
+
+\bibliographystyle{IEEEtranS}
+
+\bibliography{references}
+\end{document}

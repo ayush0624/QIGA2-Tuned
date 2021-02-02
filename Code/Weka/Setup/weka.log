@@ -1,0 +1,54 @@
+2018-10-16 10:32:51 weka.gui.GUIChooserApp main
+INFO: Logging started
+2018-10-16 10:32:52 weka.gui.GenericObjectEditor registerEditors
+INFO: ---Registering Weka Editors---
+2018-10-16 10:32:53 weka.experiment.DatabaseUtils initialize
+WARNING: Trying to add database driver (JDBC): jdbc.idbDriver - Warning, not in CLASSPATH?
+2018-10-16 10:32:53 weka.gui.beans.BeansProperties loadProperties
+INFO: [KnowledgeFlow] Loading properties and plugins...
+2018-10-16 10:32:53 weka.gui.beans.KnowledgeFlowApp init
+INFO: [KnowledgeFlow] Initializing KF...
+
+Welcome to the WEKA SimpleCLI
+
+Enter commands in the textfield at the bottom of 
+the window. Use the up and down arrows to move 
+through previous commands.
+Command completion for classnames and files is 
+initiated with <Tab>. In order to distinguish 
+between files and classnames, file names must 
+be either absolute or start with './' or '~/'
+(the latter is a shortcut for the home directory).
+<Alt+BackSpace> is used for deleting the text
+in the commandline in chunks.
+
+Type 'help' followed by <Enter> to see an overview 
+of all commands.
+2018-10-16 10:33:24 weka.gui.explorer.Explorer <init>
+INFO: Weka Explorer
+2018-10-16 10:33:24 weka.gui.explorer.Explorer <init>
+INFO: (c) 1999-2018 The University of Waikato, Hamilton, New Zealand
+2018-10-16 10:33:24 weka.gui.explorer.Explorer <init>
+INFO: web: http://www.cs.waikato.ac.nz/~ml/weka/
+2018-10-16 10:33:24 weka.gui.explorer.Explorer <init>
+INFO: Started on Tuesday, 16 October 2018
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+2018-10-16 10:48:25 weka.gui.explorer.Explorer <init>
+INFO: Weka Explorer
+2018-10-16 10:48:25 weka.gui.explorer.Explorer <init>
+INFO: (c) 1999-2018 The University of Waikato, Hamilton, New Zealand
+2018-10-16 10:48:25 weka.gui.explorer.Explorer <init>
+INFO: web: http://www.cs.waikato.ac.nz/~ml/weka/
+2018-10-16 10:48:25 weka.gui.explorer.Explorer <init>
+INFO: Started on Tuesday, 16 October 2018
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||?|||
+Bathroom|||'Selling Price'|||
+Bathroom|||'Selling Price'|||

@@ -1,0 +1,78 @@
+\section*{\color{SectionBlue}{Results}} \label{sec:sections}
+\addcontentsline{toc}{section}{Results}
+\subsection*{\color{SubSectionBlue}{Tuning Hyperparameters}}
+\addcontentsline{toc}{subsection}{Tuning Hyperparameters} \\
+
+The first phase of data collection involves tuning the actual hyper parameters of the quantum genetic algorithm. One hyper parameter that needs to be tuned is the µ value that describes how much the probability amplitudes are manipulated when the quantum population is evolving. This hyper parameter is important because it is fundamental when describing the probability amplitude manipulation that occurs in each generation of the genetic algorithm. It helps determine which cyber security controls are optimal and successful in mitigating attacks.  Depending on the value for µ, the optimization of the knapsack problem can either increase or decrease. In this research, four different values for µ were tested including 0.8, 0.9, 0.95, and 0.99 and the final optimization of the knapsack problem was recorded. \\ \newpage
+
+\vspace*{0.6cm}
+\begin{table}[H]
+    \centering
+    \caption{Results of Quantum Save with Varying Hyperparameters}
+    \label{parametri}
+    \resizebox{0.85\textwidth}{!}{%
+    \begin{tabular}{@{}1lllll1111@{}}
+    \toprule \\
+    
+    
+    \multicolumn{1}{c}{\textbf{Statistics}} &
+    \multicolumn{5}{c}{\textbf{Probability Manipulation}} & \multicolumn{4}{c}{\textbf{Disaster Algorithm}} \\
+    \cmidrule(r){1-1}   \cmidrule(lr){2-6} \cmidrule(lr){7-10} \\
+
+    Trial & 80\% & 90\% & 95\% & 99\% & \textit{Baseline} & 5  & 6  & 7 & \textit{Baseline}  \\  \midrule
+    1 &	8957 &	9528 &	9416 &	7004 & 5662 & 7503 & 7689 &	8853 & 9528 \\
+    2 &	7509 &	7723 &	8039 &	5885 & 6406 & 7017 & 7117 &	8432  & 7723	\\
+    3 &	8631 &	10436 &	7108 &	7261 & 6920 & 8642 & 7277 &	9290  & 10436 \\
+    4 &	8005 &	9352  &	7040 &	6135 & 5980 & 9920 & 7793 &	9696 & 9352	 \\
+    5 &	8149 &	7566 &	7462 &	8179  & 9678 & 8390 & 8398 & 8722 & 7566	\\
+    6 &	8299 &	7324 &	6941 &	7030 & 8775 & 9323 & 8031 &	8154 & 7324	 \\
+    7 & 7798 &	8368 &	9753 & 7076 & 9258 & 8762 & 8338 & 8459 & 8368	 \\
+    8 &	9303 &	8504  &	7077  &	8418 & 7070 & 7945 & 8484 &	6486 & 8504	\\
+    9 &	7799 &	6020  &	7161 &	8649 & 6954 & 7044 & 8232 &	7910 & 6020	 \\
+    10 & 8230 & 7008 &	9684 &	9064 & 4097 & 8448 & 8008 &	7736 &  7008	\\
+    AVG	& 8150 & 8252 & 7975 & 7641 & 7086 & 8518  & 8235 & 8292  & 8252 \\
+    SE	& 156.51	& 310.67 & 266.80 &	293.33& 414.21  & 	236.19 & 241.81 & 214.09 & 310.67 \\     
+    \bottomrule
+    \end{tabular}}
+\end{table}
+\addcontentsline{toc}{subsubsection}{Table 1: Results of Quantum Save with Varying Hyperparameters} \\
+
+{\footnotesize *** The first 10 trials out of 15 total are shown. All values are in dollars. The baseline for the Disaster Algorithm is Quantum Save's performance with simply probability amplitude manipulation. The baseline for the Probability Manipulation is Quantum Save's performance without the manipulation. \par}
+
+\vspace{1mm}
+
+These specific values were chosen for a reason when dealing with probability amplitude manipulation. At first, based upon patterns observed in Nowotniak and Kucharski's initial research \cite{nowotniak_higher-order_2014}, higher probability manipulation values, such as 99\% would be around the optimal manipulation value since that would drastically increase the probability of implementing a successful control. However, after running the algorithm under this high manipulation value, it was realized that an excessively high value would result in over fitting, where each defender was too reliant on the patterns of the best individual. So, the value was reduced to 80\%. After running the algorithm again, it was determined that the defenders in this generation are not as reliant on the patterns discovered in previous generations and a lower optimization was occurring. So, as a compromise, the value was raised to 95\% and then lowered back down to 90\% to get a variety of probability amplitude coefficients.
+
+\vspace{1mm}
+
+After this data was collected regarding the probability amplitude manipulation, another vital hyper parameter was the generation at which to implement the disaster algorithm. Depending on the generation that the disaster algorithm was implemented at, the optimization of the Knapsack problem and the choosing of countermeasures changed. For example, if the disaster algorithm was implemented towards the later generations, then the behaviors of the defenders would not impact the overall optimization of the Knapsack problem and the company would get stuck at the local maximum. On the other hand, if the disaster algorithm was implemented towards the earlier generations,t hen the company would not receive the higher level of mitigation that the previous generation had gotten. Either way, there is a trade-off between getting stuck at a local maxima and not even reaching that local maxima. To resolve this trade-off, it is important to tune the disaster algorithm hyper parameter as done in Table 1. The data collection started at a disaster step of 7 and then slowly decreased to 6 and eventually to 5. For each of these disaster steps, Quantum Save was run, with all 10 generations, and the final output was recorded.
+
+\subsection*{\color{SubSectionBlue}{Cybersecurity Application}}
+\addcontentsline{toc}{subsection}{Cybersecurity Application} \\
+
+Now that the hyper parameters have been tuned, Quantum Save can be implemented in the context of a cyber security investment problem where a small-medium target has to implement controls that result in the highest mitigation. The total mitigation across 10 generations was recorded and Quantum Save was run 10 times in order to determine whether the mitigation is better than that of existing case studies, specifically the linear optimization model proposed by Rakes et al. \cite{rakes_it_2012}. 
+
+\begin{singlespace}
+\vspace*{0.6cm}
+\begin{table}[H]
+    \centering
+    \caption{Quantum Save vs. Other Budget Allocation Models}
+    \label{parametri}
+    \resizebox{0.75\textwidth}{!}{%
+    \begin{tabular}{@{}1lll@{}}
+    \toprule
+    Budget & Quantum Save & Linear Algorithm & Brute Force Algorithm \\ \midrule
+    80k & 26.57 M & 32.20 M & 14.29 M \\
+    108k & 14.26 M & 14.29 M & 11.24 M \\
+    132k & 11.95 M & 12.78 M & 8.294 M \\
+    148k & 11.31 M & 11.32 M & 5.244 M \\
+    158k & 8.340 M & 9.184 M & 5.244 M \\
+    178k & 7.714 M & 8.071 M & 5.244 M \\
+
+    \bottomrule
+    \end{tabular}}
+\end{table}
+\end{singlespace}
+\addcontentsline{toc}{subsubsection}{Table 2: Quantum Save vs. Other Budget Allocation Models} \\
+
+The data shows the relationship between the budget of the company and the monetary loss due to a cyber attack. The relationship between the two variables and the effectiveness of Quantum Save will be investigated later. Now that the data concerning Quantum Save's accuracy has been collected, the next step of the research centered around the run time of the algorithm. When analyzing an algorithm's effectiveness, the speed of the algorithm needs to be taken into account. More specifically, data was gathered surrounding Quantum Save's scalability, or how the size of the input (number of countermeasures in the recommendation list) affected the run time of the algorithm. The data collection process involved obtaining the run time of the algorithm across 10 trials for each permutation of input sizes. The run time was measured using the internal clock on both the quantum simulator and the classical machine. The input sizes varied anywhere from 1 countermeasure in the recommendation list to 8 countermeasures in the recommendation list. After collecting data about the scalability of Quantum Save, the same procedure was completed for the Brute Force algorithm for comparison purposes. 
